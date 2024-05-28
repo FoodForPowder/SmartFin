@@ -87,11 +87,11 @@ namespace SmartFin.Controllers
         /// <param name="category">Данные о категории</param>
         /// <returns></returns>
         [HttpPut("user/{userId}/category")]
-        public async Task<IActionResult> UpdateUserCategoryAsync(Guid userId, [FromBody] UpdateCategoryDTO category)
+        public async Task<IActionResult> UpdateUserCategoryAsync(Guid gategoryId, [FromBody] UpdateCategoryDTO category)
         {
             try
             {
-                await _financeService.UpdateUserCategoryAsync(userId, category);
+                await _financeService.UpdateUserCategoryAsync(gategoryId, category);
                 return Ok();
             }
             catch (Exception ex)
