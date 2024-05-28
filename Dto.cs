@@ -24,7 +24,7 @@ namespace SmartFin.DTO{
 
     public record GoalDto(  Guid guid, DateTime startOfPeriod, DateTime endOfPeriod, string nameOfGoal, decimal sum, decimal payment, 
                                 User user, List<Recomendation>? recomendations);
-    public record CreateGoalDto(DateTime startOfPeriod, DateTime endOfPeriod, [Required]string nameOfGoal, decimal sum, Guid UserId);
+    public record CreateGoalDto(DateTime startOfPeriod, DateTime endOfPeriod, [Required]string nameOfGoal, decimal sum);
     public record UpdateGoalDTO(DateTime startOfPeriod, DateTime endOfPeriod, [Required]string nameOfGoal, decimal sum, decimal payment);
     public record RecomendationDTO(Guid guid, string message, DateTime dateOfRecommendation, Goal goal, User user);
 

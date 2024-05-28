@@ -50,22 +50,29 @@ namespace SmartFin.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetAsync()
-        {   using(var context = new SmartFinDbContext()){
-            var users = (await context.Users.Include(x=> x.Categorys).ToListAsync())
-            .Select(x => x.AsDto()).ToList();
-            return Ok(users);
-        }
+        {
+            using (var context = new SmartFinDbContext())
+            {
+                var users = (await context.Users.Include(x => x.Categorys).Include(x => x.goal).ToListAsync())
+                .Select(x => x.AsDto()).ToList();
+                return Ok(users);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetByIdAsync(Guid id)
         {
-            var user = await userRepository.GetAsync(id);
+            using (var context = new SmartFinDbContext())
+            {
+                var user = (await context.Users.Include(x => x.Categorys).Include(x => x.goal).FirstOrDefaultAsync(x=> x.guid == id));
+                          
+            
             if (user == null)
             {
                 return NotFound();
             }
             return Ok(user.AsDto());
+            }
         }
 
         [HttpPut("{id}")]

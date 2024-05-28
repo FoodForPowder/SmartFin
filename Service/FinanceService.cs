@@ -89,27 +89,44 @@ namespace SmartFin.Service
             await categoryRepository.DeleteAsync(categoryId);
 
         }
-
-
-        public async Task AddGoalAsync(Guid userId, CreateGoalDto goal)
+        public async Task DeleteUserGoalAsyn(Guid categoryId)
         {
-            var user = await userRepository.GetAsync(userId);
-            if (user == null)
-                throw new ArgumentException("User not found");
+            await goalRepository.DeleteAsync(categoryId);
 
-            decimal expenseSum = user.Expenses.Sum(x => x.sum);
-            if (goal.sum > (user.income - expenseSum) * (int)((goal.endOfPeriod - goal.startOfPeriod).Days / 30.436875))
+        }
+
+
+        public async Task AddUserGoalAsync(Guid userId, CreateGoalDto goal)
+        {
+            using (var context = new SmartFinDbContext())
             {
-                throw new Exception("Goal can't be reached");
+                var user = context.Users.FirstOrDefault(x => x.guid == userId);
+                if (user == null)
+                    throw new ArgumentException("User not found");
+                decimal expenseSum = 0;
+                if (user.Expenses?.Count() > 0)
+                {
+                    expenseSum = user.Expenses.Sum(x => x.sum);
+                }
+
+                if (goal.sum > (user.income - expenseSum) * (int)((goal.endOfPeriod - goal.startOfPeriod).Days / 30.436875))
+                {
+                    throw new Exception("Goal can't be reached");
+                }
+                var newGoal = new Goal
+                {
+                    guid =  Guid.NewGuid(),
+                    nameOfGoal = goal.nameOfGoal,
+                    startOfPeriod = goal.startOfPeriod,
+                    endOfPeriod = goal.endOfPeriod,
+                    sum = goal.sum,
+                    user = user,
+                    userId = userId,
+                };               
+                context.Goals.Add(newGoal);
+                await context.SaveChangesAsync();
             }
-            var newGoal = new Goal
-            {
-                guid = new Guid(),
-                nameOfGoal = goal.nameOfGoal,
-                startOfPeriod = goal.startOfPeriod,
-                endOfPeriod = goal.endOfPeriod,
-                sum = goal.sum
-            };
+
 
 
         }
@@ -123,6 +140,8 @@ namespace SmartFin.Service
             expense.category = category;
             await expenseRepository.UpdateAsync(expense);
         }
+
+
 
 
     }

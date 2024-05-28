@@ -25,7 +25,8 @@ namespace SmartFin.Db
             modelBuilder.Entity<User>()
                 .HasOne(o => o.goal)
                 .WithOne(od => od.user)
-                .HasForeignKey<Goal>();
+                .HasForeignKey<Goal>(o => o.userId)
+                .IsRequired();
 
             modelBuilder.Entity<User>()
             .HasMany(e => e.Categorys)

@@ -118,5 +118,37 @@ namespace SmartFin.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost("user/{userId}/goal")]
+        public async Task<IActionResult> AddUserGoal(Guid userId, [FromBody]CreateGoalDto goal){
+                try
+            {
+                await _financeService.AddUserGoalAsync(userId, goal);
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        /// <summary>
+        /// Удалить цель пользователя
+        /// </summary>
+        /// <param name="GoalId"></param>
+        /// <returns></returns>
+        [HttpDelete("user/goal/{GoalId}")]
+        public async Task<IActionResult> DeleteUserGoal(Guid GoalId)
+        {
+            try
+            {
+                await _financeService.DeleteUserGoalAsyn(GoalId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -13,10 +13,8 @@ namespace SmartFin.Entities
 
         public decimal income { get; set; }
 
-        public Guid? goalId{get; set; }
         public Goal? goal { get; set; }
-
-        
+      
         public List<Expense>? Expenses { get; set; } = new List<Expense>();
 
         public List<Recomendation> Recomendations { get; set; } = new();
